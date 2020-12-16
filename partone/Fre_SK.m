@@ -1,6 +1,6 @@
 function [bit_datas] = Fre_SK(fileName,message)
-%字符串转化为二进制字符串序列,message是要传输的字符串
-originM = dec2bin(message,16);
+%字符串转化为二进制字符串序列,message是要传输的字符串，ascii
+originM = dec2bin(message,8);
 %经过dec2bin后会转化为
 %二进制字符串换为二进制数组，用fliplr翻转，因为bi2de生成的01序列反向
 datas = double(originM) - '0';      %得到0,1字符串
