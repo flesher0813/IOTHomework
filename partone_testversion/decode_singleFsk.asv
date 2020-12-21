@@ -28,7 +28,7 @@ preamblePos = strfind(decode_datas,preamble);
 if preamblePos + length(preamble) + 7 > length(decode_datas)
     payload = -1;
     decode_message = -1;
-    %warning('preamblePos unsuitable');
+    %warning('preamblePos unsuitable\n');
     return
 end
 
@@ -36,7 +36,7 @@ header = decode_datas(preamblePos + length(preamble): preamblePos + length(pream
 if length(header) < 8
     payload = -1;
     decode_message = -1;
-    %warning('header unsuitable');
+    warning('header unsuitable\n');
     return
 end
 payload = bi2de(fliplr(header));
@@ -57,12 +57,12 @@ payload = bi2de(fliplr(header));
 if onset + (length(preamble) + 8 + payload)*symbol_len - 1 > length(sig)
     payload = -1;
     decode_message = -1;
-    %warning('message unsuitable');
+    %warning('message unsuitable\n');
     return
 end
 
 sig_m = sig(onset + (length(preamble) + 8)*symbol_len:onset + (length(preamble) + 8 + payload)*symbol_len - 1);
 decode_message = getOriginalSig(sig_m,symbol_len,fs,fs_low,fs_high);
-%disp(tanslate(decode_message));
+disp()
 end
 

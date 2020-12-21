@@ -1,8 +1,8 @@
 function [decode_datas] = getOriginalSig(sig,symbol_len,fs,fs_low,fs_high)
-hd_low = design(fdesign.bandpass('N,F3dB1,F3dB2',6,fs_low - 100, fs_low + 100,fs),'butter');
+hd_low = design(fdesign.bandpass('N,F3dB1,F3dB2',6,fs_low - 500, fs_low + 500,fs),'butter');
 sig_low = filter(hd_low,sig);
 
-hd_high = design(fdesign.bandpass('N,F3dB1,F3dB2',6,fs_high - 100, fs_high + 100,fs),'butter');
+hd_high = design(fdesign.bandpass('N,F3dB1,F3dB2',6,fs_high - 500, fs_high + 500,fs),'butter');
 sig_high = filter(hd_high,sig);
 
 %figure
@@ -27,7 +27,7 @@ end
 
 %thresh
 decode_datas = [];
-thresh = symbol_len*0.8;
+thresh = symbol_len*0.6;
 for i = 1:symbol_len:length(st)
     smb = st(i:i+symbol_len-1);
     A = sum(abs(smb));

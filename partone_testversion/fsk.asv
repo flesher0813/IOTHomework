@@ -70,7 +70,7 @@ while message_len > 0
         start_pos = start_pos + 1;
     end
     message_len = message_len - min(message_len,248);
-    sig = [sig,zeros(1,symbol_duration*fs*4)];
+    sig = []
 end
 
 disp(length(sig));

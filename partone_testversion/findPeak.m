@@ -1,4 +1,5 @@
 function [peak_points] = findPeak(fileName)
+%遇到问题：当用作索引时,冒号运算符需要整数操作数。
 [sig,fs] = audioread(fileName);
 fs_low = 4000;
 fs_high = 6000;
@@ -7,12 +8,28 @@ symbol_len = fs*symbol_duration;
 t = 0:1/fs:symbol_duration - 1/fs;
 preamble = [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1];
 
+%不使用chirp时使用，但是用chirp时全是错的
 smb0 = cos(2*pi*fs_low*t);
 smb1 = cos(2*pi*fs_high*t);
 
+%chirp
+%smb0 = chirp(t,fs_low - 200,symbol_duration - 1/fs, fs_low + 200);
+%smb1 = chirp(t,fs_high - 200,symbol_duration - 1/fs, fs_high + 200);
+
 %展示原信号
-figure(1);
-plot(sig)
+hd_low = design(fdesign.bandpass('N,F3dB1,F3dB2',6,fs_low - 500, fs_low + 500,fs),'butter');
+sig_low = filter(hd_low,sig);
+
+hd_high = design(fdesign.bandpass('N,F3dB1,F3dB2',6,fs_high - 500, fs_high + 500,fs),'butter');
+sig_high = filter(hd_high,sig);
+
+figure(1)
+subplot(311)
+plot(sig);
+subplot(312)
+plot(sig_low);
+subplot(313)
+plot(sig_high);
 
 %生成前导码
 preamble_sig = [];
@@ -48,14 +65,13 @@ end
 %可能每每遍历选最大的，然后解码看看，再把相关的onset都删掉，再重复这个过程？
 messages = [];
 idx = -1;
-val = 1001;
+val = 100000;
 peak_points = [];
 payload = 0;
-while val > 1000
+while val > 0
     [val,idx] = max(vals);
     offset = offsets(idx);
     onset = onsets(idx);
-    
     if ~ismember(onset + offset,peak_points)
         [payload,decode_message] = decode_singleFsk(fileName,onset + offset);
         if payload > 0
@@ -79,5 +95,8 @@ end
 %按顺序排列onset，解码可能在上一个部分实现，比如开一个矩阵，用个数组算了，找到起始点，后面一位就是长度
 %每一列开头是起始点，然后payload和message，再按新peak_points的顺序获得message，再解码？
 peak_points = sort(peak_points);
+disp(peak_points);
+%str = tanslate(messages(3:3 + messages(2) - 1));
+%disp(str);
 end
 
