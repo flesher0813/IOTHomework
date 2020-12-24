@@ -3,6 +3,7 @@ function [] = fsk(message)
 originM = dec2bin(message,8);
 %经过dec2bin后会转化为
 %二进制字符串换为二进制数组，用fliplr翻转，因为bi2de生成的01序列反向
+%在目前preamble的基础上加一个chirp信号，能不能有效防止波形丢失
 datas = double(originM) - '0';%得到0,1字符串
 preamble = [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1];
 [rows,] = size(datas);
@@ -25,6 +26,9 @@ t = 0:1/fs:symbol_duration - 1/fs;
 smb0 = cos(2*pi*fs_low*t);
 smb1 = cos(2*pi*fs_high*t);
 
+%观察发现音频开头总是录不到的样子，非常迷惑的是第一次尝试失败，第二次却和原音频很相近，第二次的图可见手机相册
+preamble_pre = [smb0,smb1,smb1,smb0];
+
 %使用chirp时
 %smb0 = chirp(t,fs_low - 200,symbol_duration - 1/fs, fs_low + 200);
 %smb1 = chirp(t,fs_high - 200,symbol_duration - 1/fs, fs_high + 200);
@@ -32,9 +36,9 @@ smb1 = cos(2*pi*fs_high*t);
 sig = [];
 
 start_pos = 1;
-bits_length = 0;
 while message_len > 0
     %前导码
+    sig = [sig,preamble_pre];
     for i = 1:length(preamble)
         if preamble(i) < 1
             sig = [sig,smb0];
@@ -73,7 +77,7 @@ while message_len > 0
     sig = [sig,zeros(1,symbol_duration*fs*4)];
 end
 
-disp(length(sig));
+%disp(length(sig));
 sig_carrier = awgn(sig, 20);
 figure(1)
 subplot(211)

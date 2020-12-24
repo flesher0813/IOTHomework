@@ -27,7 +27,7 @@ end
 
 %thresh
 decode_datas = [];
-thresh = symbol_len*0.6;
+thresh = symbol_len*0.5;
 for i = 1:symbol_len:length(st)
     smb = st(i:i+symbol_len-1);
     A = sum(abs(smb));

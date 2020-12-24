@@ -1,6 +1,6 @@
 function [] = realTimeRecord()
 fs = 48000;
-timeLength=0.1;            % 采样时长，单位秒
+timeLength=0.025;            % 采样时长，单位秒
 samples=timeLength*fs;  % 默认采样率48000，计算采样点数
 deviceReader = audioDeviceReader(fs,samples);
 setup(deviceReader);
@@ -25,9 +25,7 @@ drawnow;
 
 %录音10s
 fileWriter = dsp.AudioFileWriter('mySpeech.wav','FileFormat','WAV','SampleRate',fs);
-%tic
  while 2 < 3
-   %disp(toc);
    [audioIn,Overrun] = deviceReader();        % 采样
    if Overrun > 0
       warning('  数据溢出 %d 位\n',Overrun);
@@ -37,14 +35,13 @@ fileWriter = dsp.AudioFileWriter('mySpeech.wav','FileFormat','WAV','SampleRate',
        disp('press e');
        break;
    end
-    
+   
    ydata_fft=fft(audioIn);             % 傅里叶变换
    ydata_abs=abs(ydata_fft(1:samples/2));% 取绝对值
    set(pic, 'ydata',audioIn);          % 更新波形图数据
    set(pic2, 'ydata',log(ydata_abs));  % 更新频谱图数据
    drawnow;                            % 刷新
    fileWriter(audioIn);
-   
  end
  disp('done');
  release(fileWriter);

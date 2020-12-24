@@ -21,8 +21,11 @@ sig_ph = sig(onset:onset + (length(preamble) + 8)*symbol_len - 1);
 
 decode_datas = getOriginalSig(sig_ph,symbol_len,fs,fs_low,fs_high);
 %disp(decode_datas);
+
 %前导码,获取包的长度
 preamblePos = strfind(decode_datas,preamble);
+
+%只是用于检查是否解析出正确的preamblePos
 
 %检查解析出的数据是否够长
 if preamblePos + length(preamble) + 7 > length(decode_datas)
@@ -63,6 +66,6 @@ end
 
 sig_m = sig(onset + (length(preamble) + 8)*symbol_len:onset + (length(preamble) + 8 + payload)*symbol_len - 1);
 decode_message = getOriginalSig(sig_m,symbol_len,fs,fs_low,fs_high);
-%disp(tanslate(decode_message));
+disp(tanslate(decode_message));
 end
 
