@@ -1,4 +1,4 @@
-function [] = realTimeRecord()
+function [] = realTimeRecord(fileName,timeLimit)
 fs = 48000;
 timeLength=0.025;            % 采样时长，单位秒
 samples=timeLength*fs;  % 默认采样率48000，计算采样点数
@@ -24,8 +24,9 @@ axes1.Position=[0.040 0.06 0.92 0.25];
 drawnow;
 
 %录音10s
-fileWriter = dsp.AudioFileWriter('mySpeech.wav','FileFormat','WAV','SampleRate',fs);
- while 2 < 3
+fileWriter = dsp.AudioFileWriter(fileName,'FileFormat','WAV','SampleRate',fs);
+tic
+ while toc < timeLimit
    [audioIn,Overrun] = deviceReader();        % 采样
    if Overrun > 0
       warning('  数据溢出 %d 位\n',Overrun);

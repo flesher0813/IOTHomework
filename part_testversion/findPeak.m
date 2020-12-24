@@ -1,4 +1,4 @@
-function [peak_points] = findPeak(fileName)
+function [peak_points,messages] = findPeak(fileName)
 %遇到问题：当用作索引时,冒号运算符需要整数操作数。
 [sig,fs] = audioread(fileName);
 fs_low = 4000;
@@ -75,10 +75,11 @@ while val > 0
         [payload,decode_message] = decode_singleFsk(fileName,onset + offset);
         if payload > 0
             peak_points = [peak_points,onset + offset];
+            messages = [messages,onset + offset,payload,decode_message]
+            disp(translate(decode_message));
             offsets(idx:min(idx + length(preamble) + 8 + payload,length(offsets))) = [];
             onsets(idx:min(idx + length(preamble) + 8 + payload,length(onsets))) = [];
             vals(idx:min(idx + length(preamble) + 8 + payload,length(vals))) = [];
-            messages = [messages,onset + offset,payload,decode_message]
         else
             offsets(idx) = [];
             onsets(idx) = [];
@@ -94,9 +95,11 @@ end
 %按顺序排列onset，解码可能在上一个部分实现，比如开一个矩阵，用个数组算了，找到起始点，后面一位就是长度
 %每一列开头是起始点，然后payload和message，再按新peak_points的顺序获得message，再解码？
 peak_points = sort(peak_points);
-%disp(peak_points);
+disp(peak_points);
+disp(length(sig));
+disp(peak_points(1)/length(sig)*5)
 %disp(length(sig));
-%str = tanslate(messages(3:3 + messages(2) - 1));
+%str = translate(messages(3:3 + messages(2) - 1));
 %disp(str);
 end
 

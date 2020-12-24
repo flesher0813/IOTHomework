@@ -6,6 +6,7 @@ symbol_len = fs*symbol_duration;
 fs_low = 4000;
 fs_high = 6000;
 t = 0:1/fs:symbol_duration - 1/fs;
+%check前导码时前两个总会失真，去掉试试,有时可以读出，只能判定是玄学
 preamble = [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1];
 
 %检查onset是否能用
@@ -20,7 +21,6 @@ end
 sig_ph = sig(onset:onset + (length(preamble) + 8)*symbol_len - 1);
 
 decode_datas = getOriginalSig(sig_ph,symbol_len,fs,fs_low,fs_high);
-%disp(decode_datas);
 
 %前导码,获取包的长度
 preamblePos = strfind(decode_datas,preamble);
@@ -66,6 +66,6 @@ end
 
 sig_m = sig(onset + (length(preamble) + 8)*symbol_len:onset + (length(preamble) + 8 + payload)*symbol_len - 1);
 decode_message = getOriginalSig(sig_m,symbol_len,fs,fs_low,fs_high);
-disp(tanslate(decode_message));
+%disp(translate(decode_message));
 end
 

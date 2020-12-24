@@ -1,11 +1,13 @@
-function [] = lauchSecond(fileName ,totalTime)
+function [] = lauchSecond(fileName ,T1)
 %生成时间差数据
-disp(datestr(now,'SS.FFF'));
-message = num2str(totalTime);
+T2 = str2num(datestr(now,'SS.FFF'));
+deltaT = mod(T2 - T1 + 60,60);
+disp(deltaT);
+message = num2str(deltaT);
 fsk(fileName,message);
 
 %%播放
-[y, Fs] = audioread([fileName,'.wav']);
+[y, Fs] = audioread(fileName);
 x = y(:, 1);
 sound(y, Fs);
 

@@ -1,4 +1,4 @@
-function [] = fsk(message)
+function [] = fsk(fileName,message)
 %字符串转化为二进制字符串序列,message是要传输的字符串，ascii
 originM = dec2bin(message,8);
 %经过dec2bin后会转化为
@@ -84,6 +84,6 @@ subplot(211)
 plot(sig);
 subplot(212)
 plot(sig_carrier);
-audiowrite('test.wav',sig,fs);
+audiowrite(fileName,sig,fs);
 end
 
