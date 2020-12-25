@@ -7,8 +7,10 @@ disp(T0);
 fsk(fileName,T0);
 %播放
 [y, Fs] = audioread(fileName);
-x = y(:, 1);
 sound(y, Fs);
+disp(length(y)/Fs)
+pause(length(y)/Fs);
+disp(datestr(now,'SS.FFF'));
 %输出播放结束时间
 receiveSecond(str2num(T0));
 end

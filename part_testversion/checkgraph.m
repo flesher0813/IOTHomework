@@ -15,6 +15,8 @@ normalSig_high = filter(hd_high,normalSig);
 [low_upper,] = envelope(normalSig_low);
 [high_upper,] = envelope(normalSig_high);
 
+
+disp(length(normalSig));
 figure(1)
 subplot(511)
 plot(normalSig);

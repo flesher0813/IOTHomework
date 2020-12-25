@@ -97,7 +97,7 @@ end
 peak_points = sort(peak_points);
 disp(peak_points);
 disp(length(sig));
-disp(peak_points(1)/length(sig)*5)
+%disp(peak_points(1)/length(sig)*5)
 %disp(length(sig));
 %str = translate(messages(3:3 + messages(2) - 1));
 %disp(str);
