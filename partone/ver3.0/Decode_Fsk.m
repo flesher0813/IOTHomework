@@ -40,7 +40,7 @@ sig_index=find(abs(sig)>0.3);
 max_index=1;
 max_corr=0;
 if ~isempty(sig_index)   %channel毕竟重复了两遍，考虑预热的问题，选择后一个channel做相关
-    for index=sig_index(1)-20+4*symbol_length:1:sig_index(1)+10+4*symbol_length
+    for index = sig_index(1) - 20 + 4*symbol_length:1:sig_index(1)+10+4*symbol_length
         current_corr=sum(sig(index:index+length(channel)-1)'.*channel);
         if abs(current_corr)>abs(max_corr)
             max_corr=current_corr;

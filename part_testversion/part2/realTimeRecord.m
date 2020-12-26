@@ -1,11 +1,13 @@
 function [] = realTimeRecord(fileName,timeLimit)
+disp('realTimeRecord');
+disp(datestr(now,'SS.FFF'));
+
 fs = 48000;
 timeLength=0.025;            % 采样时长，单位秒
 samples=timeLength*fs;  % 默认采样率48000，计算采样点数
 deviceReader = audioDeviceReader(fs,samples);
 setup(deviceReader);
 [audioIn,~] = deviceReader();                     % 第一次采样
-
 figure('Name','实时频谱','MenuBar'...
     ,'none','ToolBar','none','NumberTitle','off');
 xdata=(1:1:samples/2)/timeLength;          
